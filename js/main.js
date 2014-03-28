@@ -5,8 +5,8 @@ var isPlaying = false;
 var stepsLength = 16;
 var cIndex = 0;
 var tempo = 120;
-var maxTempo = 220;
-var minTempo = 80;
+var maxTempo = 200;
+var minTempo = 40;
 
 // row sequences
 var steps_0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -29,7 +29,26 @@ var lastDrawTime = -1;
 
 $(document).ready(function() {
 
-    $('.step-btn').each(function(index) {
+    $('.step-btn0').each(function(index) {
+        // add click event listener
+        $(this).on('click', function() {
+            toggleBtnSelection(this);
+        });
+    });
+
+    $('.step-btn1').each(function(index) {
+        // add click event listener
+        $(this).on('click', function() {
+            toggleBtnSelection(this);
+        });
+    });
+    $('.step-btn2').each(function(index) {
+        // add click event listener
+        $(this).on('click', function() {
+            toggleBtnSelection(this);
+        });
+    });
+    $('.step-btn3').each(function(index) {
         // add click event listener
         $(this).on('click', function() {
             toggleBtnSelection(this);
@@ -76,17 +95,19 @@ function toggleBtnSelection(elem) {
 
     var active = $(elem).attr('class').indexOf('active') !== -1;
     var id = elem.id;
+    var row = parseInt(id.split('-')[0]);
+    var step = parseInt(id.split('-')[1]);
+
     if (active) {
-        $(elem).removeClass('active');
+        $(elem).removeClass('active-level' + row);
         active = false;
     }
     else {
-        $(elem).addClass('active');
+        $(elem).addClass('active-level' + row);
         active = true;
     }
 
-    var row = parseInt(id.split('-')[0]);
-    var step = parseInt(id.split('-')[1]);
+    
 
     if (row === 0) {
         if (active) {
@@ -165,8 +186,8 @@ function follow(index){
     var elNew = $('#follow-' + index);
     var elOld = $('#follow-' + lastIndex);
 
-    $(elNew).addClass('active');
-    $(elOld).removeClass('active');
+    $(elNew).addClass('active-follow');
+    $(elOld).removeClass('active-follow');
 }
 
 
