@@ -1,0 +1,89 @@
+/* Customize container */
+@media (min-width: 1024px) {
+    .container {
+        max-width: 900px;
+    }
+}
+
+@media screen and (min-width: 990px) {
+    .controls .mark-controls {
+        display: inline;
+    }
+}
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+    /* Remove the padding we set earlier */
+    header {
+        padding-left: 0;
+        padding-right: 0;
+        padding-bottom: 0;
+        margin-bottom: 30px;
+    }
+}
+
+@font-face {
+    font-family: "Doulos";
+    src: url("../fonts/DoulosSILR.ttf");
+}
+
+/* Space out content a bit */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+/* Everything but the jumbotron gets side spacing for mobile first views */
+header {
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+/* Step Button */
+
+.step-btn {
+    width:20px;
+    height: 20px;
+    border: 1px solid black;
+    border-radius:2px;
+    padding: 2px;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.active{    
+    background-color: red;
+}
+
+.step-follow {
+    width:20px;
+    height: 5px;
+    border: 1px solid black;
+    border-radius:2px;
+    padding: 2px;
+    display: inline-block;
+}
+
+
+.mes-container{   
+    width: 110px;
+    display: inline-block;
+}
+
+table tr td{
+    padding:5px;
+    width: 125px;
+}
+
+table tr td input{    
+    width: 175px;
+}
+
+table tr td input.phonetic{
+    font-family: Doulos;
+}
+
+
+
