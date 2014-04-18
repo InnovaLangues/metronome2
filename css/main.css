@@ -41,6 +41,22 @@ header {
     border-bottom: 1px solid #e5e5e5;
 }
 
+/* line of top wich allow to see the current step playing */
+.step-follow {
+    /*width:20px;*/
+    width: 5.5%;
+    height: 25px;
+    border: 1px solid black;
+    border-radius:2px;
+    padding: 2px;
+    display: inline-block;
+    text-align: center;
+}
+
+.active-follow{    
+    background-color: #FF0033;
+}
+
 /* container for 4 steps */
 .mes-container{   
     width: 110px;
@@ -50,14 +66,30 @@ header {
 /* surround the step button */
 .step-container{
     display: inline-block;
-    width:20px;
+    /*width:20px;*/
+    width: 5.5%;
     height: 20px;
     padding: 2px;
     margin: 0 auto;
 }
-/* Step Buttons */
-/* high accent step button */
 
+/* PRECOUNT */
+.precount{
+    margin-top:2px;
+}
+/* Step Buttons */
+/* precount step button */
+.step-btn {
+    width:20px;
+    height: 20px;
+    border: 1px solid black;
+    border-radius:15%;
+    padding: 2px;
+}
+
+.active-precount {
+    background-color: #FF0000;
+}
 
 /* high accent step button */
 .step-btn0 {
@@ -88,30 +120,6 @@ header {
     padding: 2px;
     cursor: pointer;
 }
-/* pause step button */
-.step-btn3 {
-    width:17px;
-    margin: 0 auto;
-    height: 17px;
-    border: 1px solid black;
-    border-radius:50%;
-    padding: 2px;
-    cursor: pointer;
-}
-
-/* line of top wich allow to see the current step playing */
-.step-follow {
-    width:20px;
-    height: 5px;
-    border: 1px solid black;
-    border-radius:2px;
-    padding: 2px;
-    display: inline-block;
-}
-
-.active-follow{    
-    background-color: #FF0033;
-}
 
 /* kind of red */
 .active-level0{    
@@ -128,25 +136,57 @@ header {
     background-color: #0099CC;
 }
 
-.active-level3{    
-    background-color: #ccc;
-}
 
-
-
-
-table tr td{
+table.text-table tr td{
     padding:5px;
-    width: 125px;
+    height: 55px;
 }
 
-table tr td input{    
-    width: 175px;
+table.text-table tr td input{    
+    width: 100%;
+    height:100%;
+    font-size:35px;
 }
 
-table tr td input.phonetic{
+table.text-table tr td input#phonetic{
     font-family: Doulos;
 }
 
+table.text-table tr td.td-button{
+    width: 20px;
+}
+
+/* Stress text title */
+.stress3{
+    font-size: 20px;
+}
+
+.stress2{
+    font-size: 15px;
+}
+.stress1{
+    font-size: 10px;
+}
 
 
+
+.symbols-container{
+    width: 100%;
+    height: 55px;
+    font-size: 35px;
+    /*background-color: red;*/
+}
+
+.symbol{
+
+}
+
+/* search on wiktionnary button */
+.wiki{
+    background: url(imgs/wiki.png);
+    background-size: 25px 25px;
+    background-repeat:no-repeat;
+    background-position: center;
+    width: 40px;
+    height: 34px;
+}
