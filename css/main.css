@@ -41,6 +41,10 @@ header {
     border-bottom: 1px solid #e5e5e5;
 }
 
+.logo{
+   display: inline; 
+}
+
 /* line of top wich allow to see the current step playing */
 .step-follow {
     /*width:20px;*/
