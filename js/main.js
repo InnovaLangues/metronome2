@@ -130,7 +130,6 @@ function playBeat() {
         }
         // play third sound ?
         if (steps_2[cIndex] === 1) {
-            // Pan the hihat according to sequence position.
             playSound(sound_3.buffer, contextPlayTime);
         }
         // drow follow line       
@@ -145,23 +144,27 @@ function playBeat() {
 
 function playPrecount() {
     timeoutPrecountId = setTimeout("playPrecount()", (60000 / tempo));
-    precountPlayed++;
-    if (5 === precountPlayed) {
+    
+    
+    if (5 >= precountPlayed) {
+        playPcSound(precountSound.buffer, 0);
+         precountPlayed++;
+        $(".step-btn").addClass('active-precount');
+        setTimeout(function() {
+            $(".step-btn").removeClass('active-precount');
+        }, 60);
+    }
+   
+    if (6 <= precountPlayed) {
         clearTimeout(timeoutPrecountId);        
         time = 0;
         startOffset = context.currentTime + 0.005;
         isPlaying = true;
         precountPlayed = 0;
-        setTimeout(function() {
+        playBeat();  
+        /*setTimeout(function() {
              playBeat();        
-        }, 60000 / tempo);       
-    }
-    if (4 >= precountPlayed) {
-        playPcSound(precountSound.buffer, 0);
-        $(".step-btn").addClass('active-precount');
-        setTimeout(function() {
-            $(".step-btn").removeClass('active-precount');
-        }, 60);
+        }, 60000 / tempo);*/
     }
 }
 
