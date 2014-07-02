@@ -47,7 +47,6 @@ header {
 
 /* line of top wich allow to see the current step playing */
 .step-follow {
-    /*width:20px;*/
     width: 5.5%;
     height: 25px;
     border: 1px solid black;
@@ -61,11 +60,6 @@ header {
     background-color: #FF0033;
 }
 
-/* container for 4 steps */
-.mes-container{   
-    width: 110px;
-    display: inline-block;
-}
 
 /* surround the step button */
 .step-container{
@@ -89,10 +83,16 @@ header {
     border: 1px solid black;
     border-radius:15%;
     padding: 2px;
+    float:left;
 }
 
 .active-precount {
     background-color: #FF0000;
+}
+
+
+.round{
+    border-radius:50%;
 }
 
 /* high accent step button */
@@ -100,7 +100,7 @@ header {
     width:100%;
     height: 20px;
     border: 1px solid black;
-    border-radius:15%;
+    /*border-radius:50%;*/
     padding: 2px;    
     cursor: pointer;
 }
@@ -110,7 +110,7 @@ header {
     margin: 0 auto;
     height: 20px;
     border: 1px solid black;
-    border-radius:25%;
+    /*border-radius:25%;*/
     padding: 2px;
     cursor: pointer;
 }
@@ -120,7 +120,7 @@ header {
     margin: 0 auto;
     height: 20px;
     border: 1px solid black;
-    border-radius:35%;
+    /*border-radius:35%;*/
     padding: 2px;
     cursor: pointer;
 }
@@ -139,6 +139,7 @@ header {
 .active-level2{    
     background-color: #0099CC;
 }
+
 
 
 table.text-table tr td{
@@ -161,14 +162,14 @@ table.text-table tr td.td-button{
 }
 
 /* Stress text title */
-.stress3{
+.stress1{
     font-size: 20px;
 }
 
 .stress2{
     font-size: 15px;
 }
-.stress1{
+.stress3{
     font-size: 10px;
 }
 
@@ -181,9 +182,6 @@ table.text-table tr td.td-button{
     /*background-color: red;*/
 }
 
-.symbol{
-
-}
 
 /* search on wiktionnary button */
 .wiki{

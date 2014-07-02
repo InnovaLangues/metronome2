@@ -2,7 +2,7 @@ var isPlaying = false;
 // number of steps
 var stepsLength = 16;
 var cIndex = 0;
-var tempo = 120;
+var tempo = 70;
 var maxTempo = 200;
 var minTempo = 40;
 // row sequences
@@ -52,7 +52,7 @@ $(document).ready(function() {
     pcBufferLoader.load();
     setTempo(tempo);
     $("#wiktionary").on('click', function() {
-        getWiktionaryInfo();
+        getCambridgeInfo();
     });
     $(document).on("click", ".phonetic", function() {
         copyPhonetic(this);
@@ -145,25 +145,24 @@ function playBeat() {
 
 function playPrecount() {
     timeoutPrecountId = setTimeout("playPrecount()", (60000 / tempo));
-    playPcSound(precountSound.buffer, 0);
-    if (2 >= precountPlayed) {
+    precountPlayed++;
+    if (5 === precountPlayed) {
+        clearTimeout(timeoutPrecountId);        
+        time = 0;
+        startOffset = context.currentTime + 0.005;
+        isPlaying = true;
+        precountPlayed = 0;
+        setTimeout(function() {
+             playBeat();        
+        }, 60000 / tempo);       
+    }
+    if (4 >= precountPlayed) {
         playPcSound(precountSound.buffer, 0);
         $(".step-btn").addClass('active-precount');
         setTimeout(function() {
             $(".step-btn").removeClass('active-precount');
         }, 60);
     }
-    if (3 === precountPlayed) {
-        //console.log(precountPlayed);
-        clearTimeout(timeoutPrecountId);
-        time = 0;
-        startOffset = context.currentTime + 0.005;
-        playBeat();
-        isPlaying = true;
-        precountPlayed = 0;
-    }
-    precountPlayed++;
-    //
 }
 
 function follow(index) {
@@ -333,17 +332,15 @@ function resetSteps() {
     steps_2 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 }
 
-function getWiktionaryInfo() {
+function getCambridgeInfo() {
     var word = $("#normal").val();
     $("#phonetics").html("");
     $("#phonetic").val("");
     $("#phonetics-loading").show();
     $.ajax({
         type: 'POST',
-        // make sure you respect the same origin policy with this url:
-        // http://en.wikipedia.org/wiki/Same_origin_policy
-        url: 'ajax/wiktionary.php',
-        dataType: 'json',
+        url: 'ajax/cambridge.php',
+        dataType: 'text',
         data: {
             'word': word,
         },
@@ -351,9 +348,7 @@ function getWiktionaryInfo() {
             if (data.length == 0) {
                 $("#phonetics").html("rien trouvé");
             } else {
-                for (var i = 0; i < data.length; i++) {
-                    $("#phonetics").append("<span data-phonetic='" + data[i] + "' class='btn btn-sm btn-default phonetic'>" + data[i] + "</span>");
-                };
+                $("#phonetics").append("<span data-phonetic='" + data + "' class='btn btn-sm btn-default phonetic'>" + data + "</span>");
             }
         },
         complete: function() {
@@ -373,6 +368,7 @@ function copyPhonetic(phonetic) {
     value = value.replaceAll('.', ' ');
     $("#phonetic").val(value);
 }
+// surcharge de la méthode replaceAll pour une string
 String.prototype.replaceAll = function(find, replace) {
     var str = this;
     return str.replace(new RegExp(find.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'), 'g'), replace);
