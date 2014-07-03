@@ -256,24 +256,53 @@ function setRythmAndSymbolsText(value) {
         var syllabe = syllabes[i];
         var length = syllabe.length;
         // SYLLABE STRENGTH
-        var strength = 2; // stress level ( 0 = stress 3 / 1 = stress 2 / 2 = stress 1 ) default = 2                
+        var strength = 2; // stress level ( 0 = stress 1 / 1 = stress 2 / 2 = stress 3 ) default = 2                
         // specific strength
         if (712 === syllabe.charCodeAt(0)) {
             strength = 0;
         } else if (716 === syllabe.charCodeAt(0)) {
             strength = 1;
         }
+
+        /*
+        eɪ  -> take -> teɪk     -> (101;618)
+        aɪ  -> buy  -> baɪ      -> (97;618)
+        ɔɪ  -> boy  -> bɔɪ      -> (596;618)
+        ɪə  -> fear -> fɪər     -> (618;601)
+        eə  -> care -> keər     -> (101;601)
+        əʊ  -> go   -> ɡəʊ      -> (601;650)
+        ʊə  -> pure -> pjʊər    -> (650;601)
+        aʊ  -> cow  -> kaʊ      -> (97;650)
+        */
+        var diphtongs = Array();
+        diphtongs[101] = [618, 601]; // e + ( ɪ | ə )
+        diphtongs[97] = [618, 650]; // a + ( ɪ | ʊ )
+        diphtongs[596] = [618]; // ɔ + ɪ
+        diphtongs[618] = [601]; // ɪ + ə
+        diphtongs[601] = [650]; // ə + ʊ
+        diphtongs[650] = [601]; // ʊ + ə 
+        
         // SYLLABE DURATION
         var duration = 'short'; // short / long default = 'short'
         // for each char in syllabe
         for (var j = 0; j < length; j++) {
-            var unicode = syllabe.charCodeAt(j);
-            // TODO : other cases that make a syllabe a long one
+            var unicode = syllabe.charCodeAt(j);           
+            // special char marking syllabe as a long one (ː)
             if (720 === unicode) {
                 duration = 'long';
                 break;
+            }           
+            // other cases (we don't search for next char if this is the last one)
+            else if(j < (length - 1) && diphtongs[unicode]) { 
+                // check if next char in the syllabe is in diphtongs possibly associated values
+                var values = diphtongs[unicode];
+                if(syllabe.charCodeAt(j+1) && values.indexOf(syllabe.charCodeAt(j+1)) != -1){
+                    duration = 'long';
+                    break;
+                }
             }
         }
+
         //////////// PATTERN /////////////
         // elem to select in pattern lines
         var elem = $('#' + strength + '-' + stepNumber); // id="0-0"
