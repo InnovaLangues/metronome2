@@ -2,7 +2,7 @@ var isPlaying = false;
 // number of steps
 var stepsLength = 16;
 var cIndex = 0;
-var tempo = 70;
+var tempo = 140;
 var maxTempo = 200;
 var minTempo = 40;
 // row sequences
