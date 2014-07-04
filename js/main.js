@@ -28,19 +28,19 @@ $(document).ready(function() {
     $('.step-btn0').each(function(index) {
         // add click event listener
         $(this).on('click', function() {
-            toggleBtnSelection(this);
+            toggleBtnSelection(this, true);
         });
     });
     $('.step-btn1').each(function(index) {
         // add click event listener
         $(this).on('click', function() {
-            toggleBtnSelection(this);
+            toggleBtnSelection(this, true);
         });
     });
     $('.step-btn2').each(function(index) {
         // add click event listener
         $(this).on('click', function() {
-            toggleBtnSelection(this);
+            toggleBtnSelection(this, true);
         });
     });
     window.AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -78,7 +78,7 @@ function finishedLoading(bufferList) {
     sound_3.connect(context.destination);
 }
 
-function toggleBtnSelection(elem) {
+function toggleBtnSelection(elem, play) {
     var active = $(elem).attr('class').indexOf('active') !== -1;
     var id = elem.id;
     var row = parseInt(id.split('-')[0]);
@@ -92,21 +92,21 @@ function toggleBtnSelection(elem) {
     }
     if (row === 0) {
         if (active) {
-            playSound(sound_1.buffer, 0);
+            if (play) playSound(sound_1.buffer, 0);
             steps_0.splice(step, 1, 1);
         } else {
             steps_0.splice(step, 1, 0);
         }
     } else if (row === 1) {
         if (active) {
-            playSound(sound_2.buffer, 0);
+            if (play) playSound(sound_2.buffer, 0);
             steps_1.splice(step, 1, 1);
         } else {
             steps_1.splice(step, 1, 0);
         }
     } else if (row === 2) {
         if (active) {
-            playSound(sound_3.buffer, 0);
+            if (play) playSound(sound_3.buffer, 0);
             steps_2.splice(step, 1, 1);
         } else {
             steps_2.splice(step, 1, 0);
@@ -144,24 +144,21 @@ function playBeat() {
 
 function playPrecount() {
     timeoutPrecountId = setTimeout("playPrecount()", (60000 / tempo));
-    
-    
     if (5 >= precountPlayed) {
         playPcSound(precountSound.buffer, 0);
-         precountPlayed++;
+        precountPlayed++;
         $(".step-btn").addClass('active-precount');
         setTimeout(function() {
             $(".step-btn").removeClass('active-precount');
         }, 60);
     }
-   
     if (6 <= precountPlayed) {
-        clearTimeout(timeoutPrecountId);        
+        clearTimeout(timeoutPrecountId);
         time = 0;
         startOffset = context.currentTime + 0.005;
         isPlaying = true;
         precountPlayed = 0;
-        playBeat();  
+        playBeat();
         /*setTimeout(function() {
              playBeat();        
         }, 60000 / tempo);*/
@@ -204,6 +201,7 @@ function stop() {
     clearTimeout(timeoutId);
     clearTimeout(timeoutPrecountId);
 }
+// EVENTS
 (function() {
     var eventHandlers = {
         'play': function() {
@@ -263,7 +261,6 @@ function setRythmAndSymbolsText(value) {
         } else if (716 === syllabe.charCodeAt(0)) {
             strength = 1;
         }
-
         /*
         eɪ  -> take -> teɪk     -> (101;618)
         aɪ  -> buy  -> baɪ      -> (97;618)
@@ -281,32 +278,30 @@ function setRythmAndSymbolsText(value) {
         diphtongs[618] = [601]; // ɪ + ə
         diphtongs[601] = [650]; // ə + ʊ
         diphtongs[650] = [601]; // ʊ + ə 
-        
         // SYLLABE DURATION
         var duration = 'short'; // short / long default = 'short'
         // for each char in syllabe
         for (var j = 0; j < length; j++) {
-            var unicode = syllabe.charCodeAt(j);           
+            var unicode = syllabe.charCodeAt(j);
             // special char marking syllabe as a long one (ː)
             if (720 === unicode) {
                 duration = 'long';
                 break;
-            }           
+            }
             // other cases (we don't search for next char if this is the last one)
-            else if(j < (length - 1) && diphtongs[unicode]) { 
+            else if (j < (length - 1) && diphtongs[unicode]) {
                 // check if next char in the syllabe is in diphtongs possibly associated values
                 var values = diphtongs[unicode];
-                if(syllabe.charCodeAt(j+1) && values.indexOf(syllabe.charCodeAt(j+1)) != -1){
+                if (syllabe.charCodeAt(j + 1) && values.indexOf(syllabe.charCodeAt(j + 1)) != -1) {
                     duration = 'long';
                     break;
                 }
             }
         }
-
         //////////// PATTERN /////////////
         // elem to select in pattern lines
         var elem = $('#' + strength + '-' + stepNumber); // id="0-0"
-        toggleBtnSelection(elem[0]);
+        toggleBtnSelection(elem[0], false);
         // next column index
         if ('long' === duration) stepNumber = i + 2;
         else stepNumber++;
