@@ -24,7 +24,105 @@ var timeoutPrecountId;
 var precountPlayed = 1;
 var pcContext;
 var pcBufferLoader;
+// DICTIONARY
+var dictionary = Array(); // collection of dico entry
+var editing = false; // editing row or not
+var selectedIndex; // the index of the edited entry in the array
+var currentEntryId; // the current edited entry id
+var dicoTable; // jquery datatable
 $(document).ready(function() {
+
+    // fake entries
+    var entry = {};
+    entry.id = 1;
+    entry.entree = 'affect';
+    entry.prononciation = 'ə ˈfekt';
+    entry.theme = 'Action';
+    entry.statut = 'V';
+    entry.groupe = 'affect rapidly';
+    entry.groupeP = 'ə ˈfekt ˈræp ɪd lɪ';
+    entry.enonce = 'The factors that affect how rapidly a chemical reaction takes place.';
+    dictionary.push(entry);
+    entry = {};
+    entry.id = 2;
+    entry.entree = 'chemical';
+    entry.prononciation = 'ˈkem ɪk əl';
+    entry.theme = 'Chemistry';
+    entry.statut = 'Adj';
+    entry.groupe = 'chemical reaction';
+    entry.groupeP = 'ˈkem ɪk əl ri ˈæk ʃən';
+    entry.enonce = 'The factors that affect how rapidly a chemical reaction takes place.';
+    dictionary.push(entry);
+    
+    // hide dico modal form
+    $("#dico-form-container").toggle(1000);
+    // happend entries data to dico entry list and init datatable
+    applyDicoDatas(dictionary);
+    // datatable select event
+    $('#dico-list tbody').on('click', 'tr', function() {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+        } else {
+            dicoTable.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+        }
+    });
+    // datatable ROW DELETION event
+    $('#dico-delete').click(function() {
+        var selected = dicoTable.$('tr.selected');
+        if (selected.get(0)) {
+            dicoTable.fnDeleteRow(selected.get(0));
+            currentEntryId = $(selected.get(0)).attr('id');
+            selectedIndex = getDicoEntryIndexById(currentEntryId);
+            if (selectedIndex != null) {
+                dictionary.splice(selectedIndex, 1);
+            } else {
+                console.log('impossible de trouver l\'entrée sélectionnée');
+            }
+        } else alert('Veuillez sélectionner la ligne à supprimer');
+    });
+    // dico ROW EDITION event
+    $('#dico-edit').click(function() {
+        // UI
+        var selected = dicoTable.$('tr.selected');
+        if (selected.get(0)) {
+            currentEntryId = $(selected.get(0)).attr('id');
+            selectedIndex = getDicoEntryIndexById(currentEntryId);
+            if (selectedIndex != null) {
+                // splice collection array             
+                var entry = dictionary[selectedIndex]; //dictionary.splice(selectedIndex, 1);
+                setFormValues(entry);
+                // show / hide form / dico table
+                $("#dico-form-container").toggle(1000);
+                $("#dico-list-container").toggle(1000);
+                editing = true;
+            } else {
+                console.log('impossible de trouver l\'entrée sélectionnée');
+            }
+        } else {
+            alert('Veuillez sélectionner la ligne à modifier');
+        }
+    });
+    // apply selected item in beat box
+    $('#dico').on('hidden.bs.modal', function() {
+        var selected = dicoTable.$('tr.selected');
+        if (selected.get(0)) {
+            currentEntryId = $(selected.get(0)).attr('id');
+            selectedIndex = getDicoEntryIndexById(currentEntryId);
+            if (selectedIndex != null) {
+                // get entry         
+                var entry = dictionary[selectedIndex];
+                // set inputs values
+                $('#normal').val(entry.entree);
+                $('#phonetic').val(entry.prononciation);
+                // empty selected bar steps and symbol span
+                emptyBarAndSymbols();
+                $("#phonetics").html("");
+            } else {
+                console.log('impossible de trouver l\'entrée sélectionnée');
+            }
+        }
+    });
     $('.step-btn0').each(function(index) {
         // add click event listener
         $(this).on('click', function() {
@@ -58,7 +156,77 @@ $(document).ready(function() {
         copyPhonetic(this);
     });
 });
+/*--------------------------------------------- DICTIONNARY ---------------------------------------------------*/
+function applyDicoDatas(datas) {
+    // in order to properly update datatable we need to destroy it an then reinitialise it
+    if (dicoTable) {
+        dicoTable.fnClearTable();
+        dicoTable.fnDestroy();
+    }
+    for (var index in dictionary) {
+        var entry = dictionary[index];
+        var html = '';
+        html += '<tr id="' + entry.id + '">';
+        html += '   <td>' + entry.entree + '</td>';
+        html += '   <td>' + entry.prononciation + '</td>';
+        html += '   <td>' + entry.theme + '</td>';
+        html += '   <td>' + entry.statut + '</td>';
+        html += '   <td>' + entry.groupe + '</td>';
+        html += '   <td>' + entry.groupeP + '</td>';
+        html += '   <td>' + entry.enonce + '</td>';
+        html += '</tr>';
+        $('#dico-list tbody').append(html);
+    }
+    // init jquery data table
+    dicoTable = $('#dico-list').dataTable({
+        "aoColumnDefs": [
+            //{ 'bSortable': false, 'aTargets': [ 0, 8 ] },
+            //{ 'bVisible': false, 'aTargets': [ 0 ] },
+            {
+                'bSearchable': false,
+                'aTargets': [6]
+            }
+        ],
+        "oLanguage": {
+            "oPaginate": {
+                "sNext": "Suivant",
+                "sPrevious": "Précédent"
+            },
+            "sEmptyTable": "Aucune entrée dans le dictionnaire",
+            "sSearch": "Filtrer :",
+            "sLengthMenu": "Afficher _MENU_ entrées",
+            "sInfo": "Affichage des entrées _START_ à _END_ sur un total de _TOTAL_"
+        }
+    });
+}
 
+function getDicoEntryIndexById(id) {
+    var index = null;
+    for (var i = 0; i < dictionary.length; i++) {
+        if (dictionary[i].id == id) {
+            index = i;
+            break;
+        }
+    }
+    return index;
+}
+
+function setFormValues(entry) {
+    $('#entree').val(entry.entree);
+    $('#prononciation').val(entry.prononciation);
+    $('#theme').val(entry.theme);
+    $('#statut').val(entry.statut);
+    $('#groupe').val(entry.groupe);
+    $('#prononciation-groupe').val(entry.groupeP);
+    $('#enonce').val(entry.enonce);
+}
+
+function generateEntryFakeId() {
+    var last = dictionary[dictionary.length - 1].id;
+    last++;
+    return last;
+}
+/*--------------------------------------------- /DICTIONNARY ---------------------------------------------------*/
 function finishedPcLoading(bufferList) {
     precountSound = pcContext.createBufferSource();
     precountSound.buffer = bufferList[0];
@@ -159,9 +327,6 @@ function playPrecount() {
         isPlaying = true;
         precountPlayed = 0;
         playBeat();
-        /*setTimeout(function() {
-             playBeat();        
-        }, 60000 / tempo);*/
     }
 }
 
@@ -201,6 +366,22 @@ function stop() {
     clearTimeout(timeoutId);
     clearTimeout(timeoutPrecountId);
 }
+
+function emptyBarAndSymbols() {
+    // empty symbol text 
+    $('span.symbol').html('');
+    // empty bar
+    $('.step-container div').each(function() {
+        var classes = $(this).attr('class');
+        if (classes.indexOf('active-level0') >= 0) {
+            $(this).removeClass('active-level0');
+        } else if (classes.indexOf('active-level1') >= 0) {
+            $(this).removeClass('active-level1');
+        } else if (classes.indexOf('active-level2') >= 0) {
+            $(this).removeClass('active-level2');
+        }
+    });
+}
 // EVENTS
 (function() {
     var eventHandlers = {
@@ -228,6 +409,60 @@ function stop() {
         'to-sequencer': function() {
             var phonetic = $('#phonetic').val();
             setRythmAndSymbolsText(phonetic);
+        },
+        'add-word': function() {
+            var entry = {};
+            if (editing) { // editing                
+                // create updated one
+                entry.id = currentEntryId;
+                entry.entree = $('#entree').val();
+                entry.prononciation = $('#prononciation').val();
+                entry.theme = $('#theme').val();
+                entry.statut = $('#statut').val();
+                entry.groupe = $('#groupe').val();
+                entry.groupeP = $('#prononciation-groupe').val();
+                entry.enonce = $('#enonce').val();
+                //remove old one
+                dictionary.splice(selectedIndex, 1);
+                // add the updated entry at the good index
+                dictionary.splice(selectedIndex, 0, entry);
+                editing = false;
+            } else { // new                
+                entry.id = generateEntryFakeId();
+                entry.entree = $('#entree').val();
+                entry.prononciation = $('#prononciation').val();
+                entry.theme = $('#theme').val();
+                entry.statut = $('#statut').val();
+                entry.groupe = $('#groupe').val();
+                entry.groupeP = $('#prononciation-groupe').val();
+                entry.enonce = $('#enonce').val();
+                dictionary.push(entry);
+            }
+            // reinit inputs values
+            $('#entree').val('');
+            $('#prononciation').val('');
+            $('#theme').val('');
+            $('#statut').val('');
+            $('#groupe').val('');
+            $('#prononciation-groupe').val('');
+            $('#enonce').val('');
+            // reinit datatable
+            applyDicoDatas(dictionary);
+            // hide / show form / table
+            $("#dico-form-container").toggle(1000);
+            $("#dico-list-container").toggle(1000);
+        },
+        'show-doc-form': function() {
+            // reinit inputs values
+            $('#entree').val('');
+            $('#prononciation').val('');
+            $('#theme').val('');
+            $('#statut').val('');
+            $('#groupe').val('');
+            $('#prononciation-groupe').val('');
+            $('#enonce').val('');
+            $("#dico-form-container").toggle(1000);
+            $("#dico-list-container").toggle(1000);
         }
     };
     document.addEventListener('click', function(e) {
@@ -379,7 +614,8 @@ function getCambridgeInfo() {
             }
         },
         complete: function() {
-            $("#phonetics-loading").hide();
+            $("#phonetics-loading").hide();            
+            emptyBarAndSymbols();
         }
     });
 }

@@ -5,9 +5,11 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="css/bootstrap.min.css" type="text/css" media="screen" />
+        <link rel="stylesheet" href="css/jquery.dataTables.min.css" type="text/css" media="screen" />
         <link rel="stylesheet" href="css/main.css" type="text/css" media="screen" />
         <script src="js/libs/jquery.js" type="text/javascript"></script>
         <script src="js/libs/bootstrap.min.js" type="text/javascript"></script>
+        <script src="js/libs/jquery.dataTables.js" type="text/javascript"></script>
         <script src="js/main.js" type="text/javascript"></script>
     </head>
     <body>
@@ -58,8 +60,9 @@
                     </div>
                 </div>
             </header>
-            <!-- TEXT INPUTS & CONTROLS -->
-            <section>
+            <section class="bar">
+                <!-- TEXT INPUTS & CONTROLS -->
+                <article>
                 <div class="row">
                     <!-- TEXT INPUTS -->
                     <div class="col-md-9">
@@ -72,7 +75,9 @@
                                     <input type="text" name="abc" value="banana" id="normal" placeholder="" />
                                 </td>
                                 <td class="td-button">
-                                    <button class="btn btn-default wiki" id="wiktionary"></button>
+                                    <button class="btn btn-default wiki" id="wiktionary" title="Dictionaire Cambridge"></button>
+                                    <button class="btn btn-default glyphicon glyphicon-book" data-toggle="modal" data-target="#dico" title="Mon dictionaire">
+                                    </button>
                                 </td>
                             </tr>
                             <tr>
@@ -143,10 +148,10 @@
                         </div>
                     </div>
                 </div>
-            </section>
-            <hr/>
-            <!-- SEQUENCER ROW -->
-            <section>
+                </article>
+                <hr/>
+                <!-- SEQUENCER ROW -->
+                <article>
                 <div class="row">
                     <div class="col-md-12">
                         <!-- STEP FOLLOWING LINE -->
@@ -390,7 +395,111 @@
                         </div>
                     </div>
                 </div>
+                </article>
             </section>
+            <!-- DICO MANAGEMENT -->
+            <section class="dico">
+            <header></header>
+            <article>
+
+            </article>
+            <article>
+
+            </article>
+        </section>
+        <!-- DICO CHOOSER -->
+    <section></section>
+    <!-- DICO MODAL -->
+    <div class="modal fade" id="dico" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Mon dictionnaire</h4>
+                </div>
+                <div class="modal-body">
+                    <!-- CREER -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <!-- ADD ENTRY BUTTON (SHOW FORM) -->
+                            <button class="btn btn-primary glyphicon glyphicon-plus" data-action="show-doc-form" title="Ajouter" id="dico-add"> </button>
+                            <button class="btn btn-primary glyphicon glyphicon-pencil" id="dico-edit" title="Editer"></button>
+                            <button class="btn btn-danger glyphicon glyphicon-trash" id="dico-delete" title="Supprimer"></button>
+                            <hr/>
+                            <!-- ENTRY FORM -->
+                            <div id="dico-form-container">
+                                <table id="dico-form" class="table">                                
+                                    <tbody>
+                                        <tr>
+                                            <td>Entrée</td>
+                                            <td><input type="text" id="entree" name="entree" value=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Prononciation</td>
+                                            <td><input type="text" id="prononciation" name="prononciation" value=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Thème</td>
+                                            <td><input type="text" id="theme" name="theme" value=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Statut</td>
+                                            <td><input type="text" id="statut" name="statut" value=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Groupe Rythmique</td>
+                                            <td><input type="text" id="groupe" name="groupe" value=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Prononciation du groupe</td>
+                                            <td><input type="text" id="prononciation-groupe" name="prononciation-groupe" value=""></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Enoncé</td>
+                                            <td><textarea rows="4" cols="50" id="enonce" name="enonce" value=""></textarea></td>
+                                        </tr>
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                <button class="btn btn-primary pull-right" data-action="add-word">
+                                                    <i class="glyphicon glyphicon-ok"></i> Valider
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                               
+                                </table>
+                            </div>
+                        </div>
+                    </div>                  
+                    <!-- LIST TABLE -->
+                    <div class="row" id="dico-list-container">
+                        <div class="col-md-12">
+                            <table id="dico-list" class="">
+                                <thead>
+                                    <tr>
+                                        <th>Entrée</th>
+                                        <th>Prononciation</th>
+                                        <th>Thème</th>
+                                        <th>Statut</th>
+                                        <th>Groupe rythmique</th>
+                                        <th>Prononciation du groupe</th>
+                                        <th>Enoncé</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-    </body>
+    </div>
+</div>
+</body>
 </html>
