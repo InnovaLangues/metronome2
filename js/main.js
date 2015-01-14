@@ -32,7 +32,7 @@ var currentEntryId; // the current edited entry id
 var dicoTable; // jquery datatable
 $(document).ready(function() {
 
-    // fake entries
+    // fake dictionnary entries
     var entry = {};
     entry.id = 1;
     entry.entree = 'affect';
